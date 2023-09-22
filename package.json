@@ -1,0 +1,29 @@
+{
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.21",
+    "@types/node": "^20.3.3",
+    "@types/rss": "^0.0.30",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "floatplane": "^4.5.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "patch-package": "^8.0.0",
+    "rss": "^1.2.2",
+    "yaml": "^2.3.1"
+  },
+  "name": "floatpod",
+  "version": "1.0.0",
+  "exports": "./index.js",
+  "scripts": {
+    "start": "tsc && node index.js",
+    "lint": "eslint . --ext .ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "patch-package"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module"
+}

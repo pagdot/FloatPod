@@ -1,0 +1,28 @@
+diff --git a/node_modules/floatplane/dist/Core.d.ts b/node_modules/floatplane/dist/Core.d.ts
+index 4cd7e39..e1b600b 100644
+--- a/node_modules/floatplane/dist/Core.d.ts
++++ b/node_modules/floatplane/dist/Core.d.ts
+@@ -2,7 +2,7 @@ import got from "got";
+ type Got = typeof got;
+ export declare class Core {
+     protected got: Got;
+-    protected readonly BaseUrl = "https://www.floatplane.com";
++    protected readonly BaseUrl = "https://floatplane.com";
+     constructor(got: Got);
+ }
+ export {};
+diff --git a/node_modules/floatplane/dist/creator.js b/node_modules/floatplane/dist/creator.js
+index 39db8cc..8aec1af 100644
+--- a/node_modules/floatplane/dist/creator.js
++++ b/node_modules/floatplane/dist/creator.js
+@@ -20,7 +20,9 @@ export class Creator extends Core {
+         const url = new URL(this.BaseUrl + ApiPaths.getCreatorBlogPosts);
+         url.searchParams.append("id", creatorGUID);
+         if (options !== undefined) {
+-            const { limit, fetchAfter, search, tags, hasVideo, hasAudio, hasPicture, hasText, sort, fromDuration, toDuration, fromDate, toDate } = options;
++            const { limit, fetchAfter, search, tags, hasVideo, hasAudio, hasPicture, hasText, sort, fromDuration, toDuration, fromDate, toDate, channel } = options;
++            if (channel !== undefined)
++                url.searchParams.append("channel", channel.toString());
+             if (limit !== undefined)
+                 url.searchParams.append("limit", limit.toString());
+             if (fetchAfter !== undefined)

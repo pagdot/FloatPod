@@ -1,0 +1,36 @@
+account:
+  user: AzureDiamond
+  password: hunter2
+channels:
+  - title: TechLinked
+    slug: techlinked
+    id: 59f94c0bdd241b70349eb72b
+    channel: techlinked
+    count: 10
+    quality: 480p
+    image: https://d3t3ozftmdmh3i.cloudfront.net/production/podcast_uploaded_nologo/13718206/13718206-1618358953061-ac104dfbaeef.jpg
+    categories: [ News ]
+    language: en
+  - title: GameLinked
+    slug: gamelinked
+    id: 59f94c0bdd241b70349eb72b
+    channel: gamelinked
+    count: 10
+    quality: 480p
+    image: https://pbs.floatplane.com/creator_icons/59f94c0bdd241b70349eb72b/649dbade3540dbc3945eeda7/375027779708988_1688058591701_100x100.jpeg
+    categories: [ News ]
+    language: en
+  - title: WAN Show
+    slug: wanshow
+    id: 59f94c0bdd241b70349eb72b
+    channel: main
+    count: 10
+    quality: 480p
+    image: https://d3t3ozftmdmh3i.cloudfront.net/production/podcast_uploaded_nologo/10089342/10089342-1635526132257-c093b912933b4.jpg
+    categories: [ News ]
+    language: en
+    filter:
+      title: '^Livestream VOD – .* - WAN Show .*$'
+base_folder: './podcasts/'
+tmp_folder: './tmp/'
+base_url: https://domain.com/podcasts
