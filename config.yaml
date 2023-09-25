@@ -31,6 +31,6 @@ channels:
     language: en
     filter:
       title: '^Livestream VOD – .* - WAN Show .*$'
-base_folder: './podcasts/'
-tmp_folder: './tmp/'
+base_folder: '/data/'
+tmp_folder: '/tmp/'
 base_url: https://domain.com/podcasts

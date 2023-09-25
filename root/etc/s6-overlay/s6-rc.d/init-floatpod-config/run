@@ -1,0 +1,25 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# create folders
+mkdir -p \
+    /config \
+    /data
+
+# permissions
+lsiown abc:abc \
+    /config/
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# permissions
+lsiown -R abc:abc \
+    /config \
+
+lsiown abc:abc \
+    /data
+
+# copy default config file if it doesn't exist
+if [[ ! -f /config/config.yaml ]]; then
+    cp /defaults/config.yaml /config/config.yaml
+fi
