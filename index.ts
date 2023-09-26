@@ -101,6 +101,7 @@ for (const channelConfig of channelConfigs) {
             {
                 console.log("Skipping already downloaded video with id " + post.id + ": " + post.title)
             }
+            else
             {
                 console.log("New video with id " + post.id + ": " + post.title)
                 const attachment = post.videoAttachments?.at(0) ?? ''
