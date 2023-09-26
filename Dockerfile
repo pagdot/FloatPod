@@ -19,7 +19,8 @@ RUN \
   apk add --no-cache \
     ffmpeg \
     nodejs \
-    npm && \
+    npm \
+    git && \
   npm install && \
   echo "**** cleanup ****" && \
   rm -rf \
