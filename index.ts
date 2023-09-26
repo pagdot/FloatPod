@@ -72,12 +72,16 @@ function filter(post: BlogPost, filter? : FilterConfig) : boolean {
 }
 
 for (const channelConfig of channelConfigs) {
+    console.log('Checking ' + channelConfig.title + ' for new content')
+
     const channel = channels.find(x => x.urlname === channelConfig.channel)
     let channelState = state.channels.find(x => x.slug == channelConfig.slug)
 
     const allPosts = await floatplane.creator.blogPosts(channel?.creator ?? '', {channel: channel?.id, limit: channelConfig.count, hasVideo: true})
     const posts = allPosts.filter(x => !channelState?.posts.some(y => x.id == y.id) && filter(x, channelConfig.filter))
     
+    console.log('Found ' + posts.length + ' new posts')
+
     if (!channelState)
     {
         const creator = (await floatplane.creator.info([channel?.creator ?? '']))[0]
@@ -93,8 +97,12 @@ for (const channelConfig of channelConfigs) {
             const fileName = path.join(channelConfig.slug, post.id + '.mp3')
             const fullFileName = path.join(baseFolder, fileName)
 
-            if (!fs.existsSync(fullFileName))
+            if (fs.existsSync(fullFileName))
             {
+                console.log("Skipping already downloaded video with id " + post.id + ": " + post.title)
+            }
+            {
+                console.log("New video with id " + post.id + ": " + post.title)
                 const attachment = post.videoAttachments?.at(0) ?? ''
                 const video = await floatplane.content.video(attachment)
                 const delivery = await floatplane.cdn.delivery('download', video.id)
@@ -125,8 +133,8 @@ for (const channelConfig of channelConfigs) {
                     convert.on("end", res);
                     convert.on("error", rej);
                 });
-                console.log("Conversion of video with id " + video.id + " finished")
                 fs.rmSync(tmpFileName)
+                console.log("Conversion of video with id " + video.id + " finished")
             }
 
             const postState = new PostState();
