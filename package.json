@@ -6,9 +6,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "floatplane": "^4.5.0",
+    "floatplane": "github:Inrixia/floatplaneAPI.ts",
     "fluent-ffmpeg": "^2.1.2",
-    "patch-package": "^8.0.0",
     "rss": "^1.2.2",
     "yaml": "^2.3.1"
   },
