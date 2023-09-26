@@ -1,8 +1,9 @@
-FROM node:20 as build
+FROM node:20-alpine as build
 
 WORKDIR /work
 COPY . .
 
+RUN apk add --no-cache git
 RUN npm install --save-dev
 RUN npx tsc
 
