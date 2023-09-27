@@ -26,6 +26,8 @@ RUN \
   rm -rf \
     /tmp/*
 
+COPY root /
+
 WORKDIR /config
 
 VOLUME /config
