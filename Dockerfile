@@ -12,7 +12,7 @@ FROM lscr.io/linuxserver/baseimage-alpine:3.18
 WORKDIR /app
 
 COPY --from=build /work/out /work/package.json /app/
-COPY config.yaml /defaults/
+COPY config.yaml.sample /defaults/
 
 RUN \
   echo "**** install deps ****" && \

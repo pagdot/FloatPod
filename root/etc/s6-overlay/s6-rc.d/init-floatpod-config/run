@@ -21,5 +21,5 @@ lsiown abc:abc \
 
 # copy default config file if it doesn't exist
 if [[ ! -f /config/config.yaml ]]; then
-    cp /defaults/config.yaml /config/config.yaml
+    cp /defaults/config.yaml.sample /config/config.yaml
 fi
