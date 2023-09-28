@@ -43,10 +43,16 @@ class State {
     channels : ChannelState[] = [];
 }
 
-const configFile = fs.readFileSync('./config.yaml', 'utf8')
-const config = YAML.parse(configFile)
+if (process.argv.length < 3)
+{
+    console.log(`Usage: {process.argv[0]} {process.argv[1]} <path to config.yaml>`);
+    process.exit(1);
+}
 
-const state : State = fs.existsSync('./state.yaml') ? YAML.parse(fs.readFileSync('./state.yaml', 'utf8')) : new State
+const configPath = process.argv[2]
+console.log(`Loading config file: {configPath}`)
+const configFile = fs.readFileSync(configPath, 'utf8')
+const config = YAML.parse(configFile)
 
 const floatplane = new Floatplane(); // Create a new API instance.
 await floatplane.login({
@@ -60,6 +66,9 @@ const channels = await floatplane.creator.channels(channelConfigs.map(x => x.id)
 const baseFolder = config['base_folder'] as string
 const tmpFolder = config['tmp_folder'] as string
 const baseUrl = config['base_url'] as string
+const statePath = config['state_path'] as string
+
+const state : State = fs.existsSync(statePath) ? YAML.parse(fs.readFileSync(statePath, 'utf8')) : new State
 
 function filter(post: BlogPost, filter? : FilterConfig) : boolean {
     if (filter?.title !== undefined && new RegExp(filter.title).test(post.title) == false)
@@ -169,5 +178,5 @@ for (const channelConfig of channelConfigs) {
 
     fs.writeFileSync(path.join(config.base_folder, channelConfig.slug + '.xml'), feed.xml(), 'utf8')
 }
-fs.writeFileSync('./state.yaml', YAML.stringify(state), 'utf8')
+fs.writeFileSync(statePath, YAML.stringify(state), 'utf8')
 console.log("All finished")
