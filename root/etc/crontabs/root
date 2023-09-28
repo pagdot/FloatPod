@@ -6,4 +6,4 @@
 0       3       *       *       6       run-parts /etc/periodic/weekly
 0       5       1       *       *       run-parts /etc/periodic/monthly
 # floatpod hourly cron
-0       *       *       *       *       s6-setuidgid abc node /app/index.js 2>&1 >> /proc/1/fd/1
+0       *       *       *       *       s6-setuidgid abc node /app/index.js /config/config.yaml 2>&1 >> /proc/1/fd/1
