@@ -14,7 +14,7 @@ class FilterConfig {
 class ChannelConfig {
     title : string = '';
     slug : string = '';
-    id : string = '';
+    creator : string = '';
     channel? : string = undefined;
     quality : string = '';
     count : number = 10;
@@ -61,7 +61,10 @@ await floatplane.login({
 });
 
 const channelConfigs = config['channels'] as ChannelConfig[]
-const channels = await floatplane.creator.channels(channelConfigs.map(x => x.id).filter((value, index, array) => array.indexOf(value) === index))
+const subscriptions = await floatplane.user.subscriptions()
+const creators = await floatplane.creator.info(subscriptions.map(x => x.creator))
+const uniqueCreatorIds = creators.filter(creator => channelConfigs.some(channel => creator.urlname == channel.creator)).map(x => x.id)
+const channels = await floatplane.creator.channels(uniqueCreatorIds)
 
 const baseFolder = config['base_folder'] as string
 const tmpFolder = config['tmp_folder'] as string

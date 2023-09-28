@@ -4,7 +4,7 @@ account:
 channels:
   - title: TechLinked
     slug: techlinked
-    id: 59f94c0bdd241b70349eb72b
+    creator: linustechtips
     channel: techlinked
     count: 10
     quality: 480p
@@ -13,7 +13,7 @@ channels:
     language: en
   - title: GameLinked
     slug: gamelinked
-    id: 59f94c0bdd241b70349eb72b
+    creator: linustechtips
     channel: gamelinked
     count: 10
     quality: 480p
@@ -22,7 +22,7 @@ channels:
     language: en
   - title: WAN Show
     slug: wanshow
-    id: 59f94c0bdd241b70349eb72b
+    creator: linustechtips
     channel: main
     count: 10
     quality: 480p
