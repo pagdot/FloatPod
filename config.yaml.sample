@@ -33,4 +33,5 @@ channels:
       title: '^Livestream VOD – .* - WAN Show .*$'
 base_folder: '/data/'
 tmp_folder: '/tmp/'
+state_path: '/config/state.yaml'
 base_url: https://domain.com/podcasts
