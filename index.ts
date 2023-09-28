@@ -45,12 +45,12 @@ class State {
 
 if (process.argv.length < 3)
 {
-    console.log(`Usage: {process.argv[0]} {process.argv[1]} <path to config.yaml>`);
+    console.log(`Usage: ${process.argv[0]} ${process.argv[1]} <path to config.yaml>`);
     process.exit(1);
 }
 
 const configPath = process.argv[2]
-console.log(`Loading config file: {configPath}`)
+console.log(`Loading config file: ${configPath}`)
 const configFile = fs.readFileSync(configPath, 'utf8')
 const config = YAML.parse(configFile)
 
@@ -84,7 +84,7 @@ function filter(post: BlogPost, filter? : FilterConfig) : boolean {
 }
 
 for (const channelConfig of channelConfigs) {
-    console.log('Checking ' + channelConfig.title + ' for new content')
+    console.log(`Checking ${channelConfig.title} for new content`)
 
     const channel = channels.find(x => x.urlname === channelConfig.channel)
     let channelState = state.channels.find(x => x.slug == channelConfig.slug)
@@ -92,14 +92,14 @@ for (const channelConfig of channelConfigs) {
     const allPosts = await floatplane.creator.blogPosts(channel?.creator ?? '', {channel: channel?.id, limit: channelConfig.count, hasVideo: true})
     const posts = allPosts.filter(x => !channelState?.posts.some(y => x.id == y.id) && filter(x, channelConfig.filter))
     
-    console.log('Found ' + posts.length + ' new posts')
+    console.log(`Found ${posts.length} new posts`)
 
     if (!channelState)
     {
         const creator = (await floatplane.creator.info([channel?.creator ?? '']))[0]
         channelState = new ChannelState();
         channelState.slug = channelConfig.slug
-        channelState.url = 'https://www.floatplane.com/channel/' + creator.urlname + '/home/' + channel?.urlname
+        channelState.url = `https://www.floatplane.com/channel/${creator.urlname}/home/${channel?.urlname}`
         state.channels.push(channelState)
     }
 
@@ -111,11 +111,11 @@ for (const channelConfig of channelConfigs) {
 
             if (fs.existsSync(fullFileName))
             {
-                console.log("Skipping already downloaded video with id " + post.id + ": " + post.title)
+                console.log(`Skipping already downloaded video with id ${post.id}: ${post.title}`)
             }
             else
             {
-                console.log("New video with id " + post.id + ": " + post.title)
+                console.log(`New video with id ${post.id}: ${post.title}`)
                 const attachment = post.videoAttachments?.at(0) ?? ''
                 const video = await floatplane.content.video(attachment)
                 const delivery = await floatplane.cdn.delivery('download', video.id)
@@ -127,7 +127,7 @@ for (const channelConfig of channelConfigs) {
                     fs.mkdirSync(path.dirname(tmpFileName), { recursive: true})
                 }
         
-                console.log("Starting download of video with id " + video.id + " to " + tmpFileName)
+                console.log(`Starting download of video with id ${video.id} to ${tmpFileName}`)
                 const downloadRequest = floatplane.got.stream(url);
                 // Pipe the download to the file once response starts
                 downloadRequest.pipe(fs.createWriteStream(tmpFileName));
@@ -135,19 +135,19 @@ for (const channelConfig of channelConfigs) {
                     downloadRequest.on("end", res);
                     downloadRequest.on("error", rej);
                 });
-                console.log("Download of video with id " + video.id + " finished")
+                console.log(`Download of video with id ${video.id} finished`)
                 if (!fs.existsSync(path.dirname(fullFileName)))
                 {
                     fs.mkdirSync(path.dirname(fullFileName), { recursive: true})
                 }
-                console.log("Starting conversion of video with id " + video.id)
+                console.log(`Starting conversion of video with id ${video.id}`)
                 const convert = ffmpeg(tmpFileName, {}).save(fullFileName)
                 await new Promise((res, rej) => {
                     convert.on("end", res);
                     convert.on("error", rej);
                 });
                 fs.rmSync(tmpFileName)
-                console.log("Conversion of video with id " + video.id + " finished")
+                console.log(`Conversion of video with id ${video.id} finished`)
             }
 
             const postState = new PostState();
@@ -155,7 +155,7 @@ for (const channelConfig of channelConfigs) {
             postState.description = post.text
             postState.mp3 = fileName
             postState.id = post.id
-            postState.url = 'https://www.floatplane.com/post/' + post.id
+            postState.url = `https://www.floatplane.com/post/${post.id}`
             postState.date = post.releaseDate
             channelState.posts.push(postState)
         }
@@ -165,7 +165,7 @@ for (const channelConfig of channelConfigs) {
         }
     }
 
-    var feed = new RSS({ title: channelConfig.title, site_url: channelState.url, feed_url: baseUrl + '/' + channelConfig.slug + '.xml', image_url: channelConfig.image, language: channelConfig.language, categories: channelConfig.categories });
+    var feed = new RSS({ title: channelConfig.title, site_url: channelState.url, feed_url: `${baseUrl}/${channelConfig.slug}.xml`, image_url: channelConfig.image, language: channelConfig.language, categories: channelConfig.categories });
 
     for (const post of channelState.posts)
     {
