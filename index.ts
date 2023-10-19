@@ -9,6 +9,8 @@ import { BlogPost } from 'floatplane/creator';
 class FilterConfig {
     title? : string = undefined;
     not_title? : string = undefined;
+    min_length : number | undefined = undefined;
+    max_length : number | undefined = undefined;
 }
 
 class ChannelConfig {
@@ -31,6 +33,7 @@ class PostState {
     url : string = '';
     id : string = '';
     date : string = '';
+    duration : number = 0;
 }
 
 class ChannelState {
@@ -78,6 +81,12 @@ function filter(post: BlogPost, filter? : FilterConfig) : boolean {
         return false
 
     if (filter?.not_title !== undefined && new RegExp(filter.not_title).test(post.title) == true)
+        return false
+
+    if (filter?.min_length !== undefined && filter.min_length > post.metadata.videoDuration)
+        return false
+
+    if (filter?.max_length !== undefined && filter.max_length < post.metadata.videoDuration)
         return false
 
     return true
@@ -157,6 +166,7 @@ for (const channelConfig of channelConfigs) {
             postState.id = post.id
             postState.url = `https://www.floatplane.com/post/${post.id}`
             postState.date = post.releaseDate
+            postState.duration = post.metadata.videoDuration
             channelState.posts.push(postState)
         }
         catch(e : any)
@@ -165,7 +175,16 @@ for (const channelConfig of channelConfigs) {
         }
     }
 
-    var feed = new RSS({ title: channelConfig.title, site_url: channelState.url, feed_url: `${baseUrl}/${channelConfig.slug}.xml`, image_url: channelConfig.image, language: channelConfig.language, categories: channelConfig.categories });
+    var feed = new RSS({ 
+        title: channelConfig.title, 
+        site_url: channelState.url, 
+        feed_url: `${baseUrl}/${channelConfig.slug}.xml`, 
+        image_url: channelConfig.image, 
+        language: channelConfig.language, 
+        categories: channelConfig.categories, 
+        custom_namespaces: { 'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd' },
+        custom_elements: [{'itunes:image': {_attr: {href: channelConfig.image}}}]
+    });
 
     for (const post of channelState.posts)
     {
@@ -175,7 +194,8 @@ for (const channelConfig of channelConfigs) {
             description: post.description,
             url: post.url,
             enclosure: {url: config.base_url + '/' + channelConfig.slug + '/' + post.id + '.mp3'},
-            date: post.date
+            date: post.date,
+            custom_elements: [{'itunes:duration': new Date(post.duration * 1000).toISOString().slice(11, 19)}]
         })
     }
 

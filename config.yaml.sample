@@ -31,6 +31,7 @@ channels:
     language: en
     filter:
       title: '^Livestream VOD – .* - WAN Show .*$'
+      min_length: 3600 # a wan show is longer than 1h
 base_folder: '/data/'
 tmp_folder: '/tmp/'
 state_path: '/config/state.yaml'
