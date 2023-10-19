@@ -13,9 +13,9 @@
   },
   "name": "floatpod",
   "version": "1.0.0",
-  "exports": "./index.js",
+  "exports": "./out/index.js",
   "scripts": {
-    "start": "tsc && node index.js",
+    "start": "tsc && node out/index.js config.yml",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
