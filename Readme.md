@@ -1,6 +1,6 @@
 # Floatplane to Podcast Converter
 
-Convert video content from [floatplane](https://floatplane.com/) and be able to consume it as a podcast audio feed.
+Convert video content from [floatplane](https://floatplane.com/) to be able to consume it as a podcast audio feed.
 
 ## Features
 
