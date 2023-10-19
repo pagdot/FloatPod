@@ -1,6 +1,18 @@
 # Floatplane to Podcast Converter
 
-This tool can run on your "server" and create podcast rss feeds from content on [flotplane](https://floatplane.com/) :)
+Convert video content from [floatplane](https://floatplane.com/) and be able to consume it as a podcast audio feed.
+
+## Features
+
+- Scan floatplane for new content
+- Conversion to mp3
+- Support for multiple generated podcasts
+- Filter on a subchannel
+- Filter based on the duration (minimal, maximal)
+- Filter based on the title
+- Docker container with cron for scheduled execution
+
+It doesn't serve the content! A web server is required to servce the generated files!
 
 ## Run it on your server
 
