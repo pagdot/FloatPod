@@ -18,7 +18,7 @@ class ChannelConfig {
     slug : string = '';
     creator : string = '';
     channel? : string = undefined;
-    quality : string = '';
+    quality : string = '480p';
     count : number = 10;
     image : string = '';
     categories : string[] = [];
