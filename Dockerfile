@@ -7,7 +7,7 @@ RUN apk add --no-cache git
 RUN npm install --save-dev
 RUN npx tsc
 
-FROM lscr.io/linuxserver/baseimage-alpine:3.18
+FROM lscr.io/linuxserver/baseimage-alpine:3.22
 
 WORKDIR /app
 
