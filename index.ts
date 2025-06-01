@@ -77,6 +77,9 @@ const statePath = config['state_path'] as string
 const state : State = fs.existsSync(statePath) ? YAML.parse(fs.readFileSync(statePath, 'utf8')) : new State
 
 function filter(post: BlogPost, filter? : FilterConfig) : boolean {
+    if (!post.metadata.hasVideo)
+        return false
+
     if (filter?.title !== undefined && new RegExp(filter.title).test(post.title) == false)
         return false
 
@@ -98,7 +101,7 @@ for (const channelConfig of channelConfigs) {
     const channel = channels.find(x => x.urlname === channelConfig.channel)
     let channelState = state.channels.find(x => x.slug == channelConfig.slug)
 
-    const allPosts = await floatplane.creator.blogPosts(channel?.creator ?? '', {channel: channel?.id, limit: channelConfig.count, hasVideo: true})
+    const allPosts = await floatplane.creator.blogPosts(channel?.creator ?? '', {channel: channel?.id, limit: channelConfig.count})
     const posts = allPosts.filter(x => !channelState?.posts.some(y => x.id == y.id) && filter(x, channelConfig.filter))
     
     console.log(`Found ${posts.length} new posts`)
@@ -195,7 +198,7 @@ for (const channelConfig of channelConfigs) {
             url: post.url,
             enclosure: {url: config.base_url + '/' + channelConfig.slug + '/' + post.id + '.mp3'},
             date: post.date,
-            custom_elements: [{'itunes:duration': new Date(post.duration * 1000).toISOString().slice(11, 19)}]
+            custom_elements: post.duration !== undefined ? [{'itunes:duration': new Date(post.duration * 1000).toISOString().slice(11, 19)}] : []
         })
     }
 
