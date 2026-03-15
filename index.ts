@@ -3,7 +3,7 @@ import RSS from 'rss'
 import fs from 'fs'
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
-import { Floatplane } from 'floatplane';
+import { Floatplane, type AuthToken, OnDeviceCode } from 'floatplane';
 import { BlogPost } from 'floatplane/creator';
 
 class FilterConfig {
@@ -52,15 +52,39 @@ if (process.argv.length < 3)
     process.exit(1);
 }
 
+const onDeviceCode: OnDeviceCode = async ({ verification_uri_complete, verification_uri }) => {
+    const verifyUri = verification_uri_complete ?? verification_uri;
+    console.log(`Please login to Floatplane via ${verifyUri}`);
+};
+
 const configPath = process.argv[2]
 console.log(`Loading config file: ${configPath}`)
 const configFile = fs.readFileSync(configPath, 'utf8')
 const config = YAML.parse(configFile)
+const authConfigFile = config['authConfig'] as string
 
-const floatplane = new Floatplane(); // Create a new API instance.
-await floatplane.login({
-    username: config['account']['user'],
-    password: config['account']['password'],
+class AuthTokenStore {
+    authToken?: AuthToken;
+}
+
+const authTokenStore = new AuthTokenStore();
+
+try {
+    const authConfigRaw = fs.readFileSync(authConfigFile, 'utf8')
+    const authToken = YAML.parse(authConfigRaw) as AuthToken
+    authTokenStore.authToken = authToken
+} catch (error) {
+}
+
+
+export const floatplane = new Floatplane({
+	authConfig: {
+		clientId: "floatplane-downloader",
+		authToken: authTokenStore.authToken,
+		onAuthToken: (authToken) => {authTokenStore.authToken = authToken; fs.writeFileSync(authConfigFile, YAML.stringify(authToken), 'utf8')},
+		onDeviceCode,
+	},
+	userAgent: `FloatPod`,
 });
 
 const channelConfigs = config['channels'] as ChannelConfig[]
@@ -101,7 +125,7 @@ for (const channelConfig of channelConfigs) {
     const channel = channels.find(x => x.urlname === channelConfig.channel)
     let channelState = state.channels.find(x => x.slug == channelConfig.slug)
 
-    const allPosts = await floatplane.creator.blogPosts(channel?.creator ?? '', {channel: channel?.id, limit: channelConfig.count})
+    const allPosts = await floatplane.creator.blogPosts(channel?.creator ?? '', {channel: channel?.id, limit: channelConfig.count, hasVideo: true})
     const posts = allPosts.filter(x => !channelState?.posts.some(y => x.id == y.id) && filter(x, channelConfig.filter))
     
     console.log(`Found ${posts.length} new posts`)

@@ -4,6 +4,7 @@ WORKDIR /work
 COPY . .
 
 RUN apk add --no-cache git
+RUN corepack enable && corepack prepare pnpm --activate
 RUN npm install --save-dev
 RUN npx tsc
 
@@ -21,6 +22,7 @@ RUN \
     nodejs \
     npm \
     git && \
+  npm install -g pnpm && \
   npm install && \
   echo "**** cleanup ****" && \
   rm -rf \
