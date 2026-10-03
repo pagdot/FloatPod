@@ -152,8 +152,9 @@ for (const channelConfig of channelConfigs) {
             else
             {
                 console.log(`New video with id ${post.id}: ${post.title}`)
-                const attachment = post.videoAttachments?.at(0) ?? ''
-                const video = await floatplane.content.video(attachment)
+                const fullPost = await floatplane.content.post(post.id)
+                const attachment = fullPost.videoAttachments?.at(0) ?? null
+                const video = await floatplane.content.video(attachment!.id)
                 const delivery = await floatplane.cdn.delivery('download', video.id)
                 const variant = delivery.groups[0].variants.find(x => x.label == channelConfig.quality)
                 const url = (delivery.groups[0].origins?.at(0)?.url ?? '') + variant?.url
